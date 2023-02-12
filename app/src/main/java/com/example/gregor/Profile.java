@@ -12,6 +12,5 @@ TextView textView7;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        String name =
     }
 }

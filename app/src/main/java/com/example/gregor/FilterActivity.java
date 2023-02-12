@@ -1,7 +1,6 @@
 package com.example.gregor;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +14,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AbsListView;
-import android.widget.LinearLayout;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toolbar;
 
@@ -28,11 +27,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
-public class FarmerMain extends AppCompatActivity {
-
+public class FilterActivity extends AppCompatActivity {
     private GoiAdapter goiAdapter;
     private RecyclerView recyclerView;
     private List<GoiDetail> goiDetails;
@@ -42,43 +39,19 @@ public class FarmerMain extends AppCompatActivity {
     private  Boolean isScrolling = false;
     int currentItems,totalItems,scrollItems;
     int offset = 20;
+    private EditText searchText;
+    private ImageButton searchButton;
+    private String text = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_farmer_main2);
-        FarmerMain.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        recyclerView = findViewById(R.id.recyclerView);
-        goiDetails = new ArrayList<>();
-        linearLayoutManager = new LinearLayoutManager(this);
-        goiAdapter = new GoiAdapter(FarmerMain.this, goiDetails);
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
-
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(goiAdapter);
-
-        toolbar = findViewById(R.id.BarLayout);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        getSupportActionBar().setTitle("Kisan GOI");
-
-        try {
-            DownloadTask task = new DownloadTask();
-            task.execute("https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=xml&offset=0&limit=20");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        loadData();
-
+        setContentView(R.layout.activity_filter);
     }
 
     @SuppressLint("StaticFieldLeak")
-    public class DownloadTask extends AsyncTask<String,Void,String>{
+    public class DownloadTask extends AsyncTask<String,Void,String> {
         @Override
         protected String doInBackground(String... urls) {
             URL url;
@@ -126,6 +99,7 @@ public class FarmerMain extends AppCompatActivity {
                     goiAdapter = new GoiAdapter(FarmerMain.this,goiDetails);
                     goiAdapter.notifyDataSetChanged();
                     recyclerView.setAdapter(goiAdapter);
+                    if(totalItems == currentItems+scrollItems)
                     recyclerView.scrollToPosition(totalItems - currentItems+1);
                     progressBar.setVisibility(View.GONE);
                 }catch(Exception e){
@@ -133,7 +107,7 @@ public class FarmerMain extends AppCompatActivity {
                 }
             }else{
                 try {
-                    DownloadTask task = new DownloadTask();
+                    FarmerMain.DownloadTask task = new FarmerMain.DownloadTask();
                     task.execute("https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=xml&offset=0&limit=20");
                 }catch(Exception e){
                     e.printStackTrace();
@@ -167,18 +141,18 @@ public class FarmerMain extends AppCompatActivity {
         });
     }
     private void fetchData(){
-         new Handler().postDelayed(new Runnable() {
-             @Override
-             public void run() {
-                 try{
-                     DownloadTask task = new DownloadTask();
-                     task.execute("https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=xml&offset=0&limit=20");
-                     offset=20;
-                 }catch (Exception e){
-                     e.printStackTrace();
-                 }
-             }
-         },5000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    FarmerMain.DownloadTask task = new FarmerMain.DownloadTask();
+                    task.execute("https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=xml&offset=0&limit=20");
+                    offset=20;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        },5000);
 
     }
     @Override
