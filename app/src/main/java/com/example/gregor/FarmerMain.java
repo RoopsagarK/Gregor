@@ -3,6 +3,7 @@ package com.example.gregor;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +20,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toolbar;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -118,7 +119,7 @@ public class FarmerMain extends AppCompatActivity {
                         details.setGroceryName(part.getString("commodity"));
                         details.setGroceryPlace(part.getString("district")+","+part.getString("state"));
                         details.setGroceryPrice(part.getString("model_Price"));
-                        details.setGroceryTime(Long.valueof(part.getString("timestamp")));
+                        details.setGroceryTime(Long.valueOf(part.getString("timestamp")));
 
                         Log.i("WorkAPI",part.getString("district"));
                         goiDetails.add(details);
@@ -183,14 +184,14 @@ public class FarmerMain extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.mainmenu,menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
+         super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.searchByDistrict){
             Intent filterIntent = new Intent(FarmerMain.this,FilterActivity.class);
             startActivity(filterIntent);

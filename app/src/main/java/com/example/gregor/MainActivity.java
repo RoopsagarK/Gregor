@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         userName = findViewById(R.id.userName);
         password = findViewById(R.id.password);
 
-        userName.addTextChangedListener(loginTextWatcher);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,22 +36,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private TextWatcher loginTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String userNameInput = userName.getText().toString().trim();
-            String passwordInput = password.getText().toString().trim();
-            button.setEnabled(!userNameInput.isEmpty() && !passwordInput.isEmpty());
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
     };
-}
